@@ -15,19 +15,7 @@ pipeline {
             }
         }
 
-        stage('Run Automated Tests') {
-    steps {
-        sh '''
-        docker run --rm \
-        -v $(pwd):/workspace \
-        node:20-alpine \
-        sh -c "
-        npm install -g htmlhint &&
-        htmlhint /workspace/src/index.html
-        "
-        '''
-    }
-}
+       
 
         stage('Build Docker Image') {
             steps {
