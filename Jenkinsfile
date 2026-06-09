@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "coffee_shop"
-        DOCKER_HUB_USERNAME = "YOUR_DOCKERHUB_USERNAME"
+        DOCKER_HUB_USERNAME = "anjan03"
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
