@@ -1,39 +1,123 @@
-# Coffee Landing Page ☕️
+# ☕ Coffee Shop CI/CD Pipeline Project
 
-A static landing page dedicated to showcasing the essence of coffee. Built using **HTML** and **CSS**, this project represents a minimalist approach to web design.
+A complete end-to-end DevOps project demonstrating the deployment of a Coffee Shop Landing Page using **GitHub, Jenkins, Docker, Docker Hub, and AWS EC2, ElasticIP, Security Groups**.
 
-## ==> [🔥Live Demo](https://anirudha-8.github.io/coffee-landing-page/)
+This project automates the entire software delivery process, from source code management to containerized deployment.
+
+## 🔥to run Project
+
+http://YOUR-EC2-PUBLIC-IP
+
+---
 
 ## 🌟 Features
 
-- **Static Design**: A beautifully crafted page with clean and consistent visuals.
-- **Coffee Theme**: Aesthetic color palette and typography inspired by coffee.
-- **Simple Structure**: Includes key sections like:
-  - **Hero Section**: Welcoming message with a coffee vibe.
-  - **About Us**: Highlights the love for coffee.
-  - **Menu/Products**: Displays featured coffee offerings.
-  - **Footer**: Contact information and social links.
+- Automated CI/CD Pipeline using Jenkins
+- HTML Validation Testing with HTMLHint
+- Dockerized Application Deployment
+- Docker Hub Integration
+- AWS EC2 Deployment
+- Nginx Web Server Hosting
+- Automated Container Updates
 
-## 🔧 Technologies Used
+---
 
-- **HTML**: For the page structure.
-- **CSS**: For styling and visual design.
+## 🔄 CI/CD Workflow
 
-## 📂 File Structure
+```text
+GitHub
+   ↓
+Jenkins Pipeline
+   ↓
+HTML Validation
+   ↓
+Docker Build
+   ↓
+Docker Hub Push
+   ↓
+AWS EC2 Deployment
+   ↓
+Live Website
+```
 
-    - src
-      - images
-      - style.css
-    - index.html
+---
 
-## 🚧 Limitations
+## 🛠️ Technologies Used
 
-- **Non-Responsive Design**: Currently optimized for desktop only.
+- Git & GitHub
+- Jenkins
+- Docker
+- Docker Hub
+- AWS EC2
+- Nginx
+- HTML
+- CSS
+- Elastic IP
+- Security Groups
+---
 
-## 💡 Future Improvements
+## 📂 Project Structure
 
-- Make the design **responsive** for mobile and tablet devices.
-- Add interactivity using **JavaScript** (optional).
-- Enhance the visual appeal with animations or transitions.
+```text
+coffee_shop/
+│
+├── src/
+│   ├── index.html
+│   ├── style.css
+│   └── images/
+│
+├── Dockerfile
+├── Jenkinsfile
+└── README.md
+```
 
-Feel free to use or enhance this project to suit your needs! 😊
+---
+
+## ⚙️ Jenkins Pipeline Stages
+
+1. Checkout Source Code
+2. HTML Validation Testing
+3. Docker Image Build
+4. Docker Hub Authentication
+5. Docker Image Push
+6. Automated Deployment to EC2
+
+---
+
+## 🐳 Docker Commands
+
+### Build Image
+
+```bash
+docker build -t coffee_shop .
+```
+
+### Run Container
+
+```bash
+docker run -d --name coffee-container -p 80:80 coffee_shop
+```
+
+### Check Running Containers
+
+```bash
+docker ps
+```
+
+---
+
+## 🚀 Future Improvements
+
+- Multi-Architecture Docker Images (AMD64 & ARM64)
+- HTTPS with SSL Certificate
+- Kubernetes Deployment
+- Monitoring with Prometheus & Grafana
+- Automated Security Scanning
+
+---
+
+## 👨‍💻 Author
+
+**Anjan Kumar k a**
+
+- LinkedIn: https://www.linkedin.com/in/anjan-kumar-k-a-87a312204/
