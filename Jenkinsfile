@@ -1,31 +1,32 @@
-
-Use this:
-
-```groovy
 pipeline {
     agent any
 
     environment {
         IMAGE_NAME = "coffee_shop"
+        DOCKER_HUB_USERNAME = "YOUR_DOCKERHUB_USERNAME"
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
     stages {
 
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Test HTML') {
+        stage('Run Automated Tests') {
             steps {
                 sh '''
-                    echo "Validating HTML..."
-                    docker run --rm \
-                    -v $(pwd):/workspace \
-                    node:18-alpine \
-                    sh -c "npm install -g htmlhint && htmlhint /workspace/index.html"
+                echo "Validating HTML..."
+
+                docker run --rm \
+                -v $(pwd):/workspace \
+                node:18-alpine \
+                sh -c "
+                npm install -g htmlhint &&
+                htmlhint /workspace/src/index.html
+                "
                 '''
             }
         }
@@ -33,22 +34,26 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
-                    docker build -t $IMAGE_NAME:$IMAGE_TAG .
+                docker build -t $DOCKER_HUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG .
+                docker tag $DOCKER_HUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG \
+                           $DOCKER_HUB_USERNAME/$IMAGE_NAME:latest
                 '''
             }
         }
 
-        stage('Docker Login') {
+        stage('Login Docker Hub') {
             steps {
                 withCredentials([
                     usernamePassword(
                         credentialsId: 'dockerhub-creds',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASS'
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
                     )
                 ]) {
                     sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    echo "$DOCKER_PASSWORD" | docker login \
+                    -u "$DOCKER_USERNAME" \
+                    --password-stdin
                     '''
                 }
             }
@@ -57,9 +62,8 @@ pipeline {
         stage('Push Image') {
             steps {
                 sh '''
-                    docker push $IMAGE_NAME:$IMAGE_TAG
-                    docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
-                    docker push $IMAGE_NAME:latest
+                docker push $DOCKER_HUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG
+                docker push $DOCKER_HUB_USERNAME/$IMAGE_NAME:latest
                 '''
             }
         }
@@ -67,13 +71,15 @@ pipeline {
         stage('Deploy Container') {
             steps {
                 sh '''
-                    docker stop html-app || true
-                    docker rm html-app || true
+                docker stop coffee-container || true
+                docker rm coffee-container || true
 
-                    docker run -d \
-                        --name html-app \
-                        -p 80:80 \
-                        $IMAGE_NAME:$IMAGE_TAG
+                docker pull $DOCKER_HUB_USERNAME/$IMAGE_NAME:latest
+
+                docker run -d \
+                --name coffee-container \
+                -p 80:80 \
+                $DOCKER_HUB_USERNAME/$IMAGE_NAME:latest
                 '''
             }
         }
@@ -81,11 +87,11 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'CI/CD Pipeline Executed Successfully!'
         }
 
         failure {
-            echo 'Pipeline failed!'
+            echo 'Pipeline Failed!'
         }
     }
 }
