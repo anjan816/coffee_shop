@@ -16,20 +16,18 @@ pipeline {
         }
 
         stage('Run Automated Tests') {
-            steps {
-                sh '''
-                echo "Validating HTML..."
-
-                docker run --rm \
-                -v $(pwd):/workspace \
-                node:18-alpine \
-                sh -c "
-                npm install -g htmlhint &&
-                htmlhint /workspace/src/index.html
-                "
-                '''
-            }
-        }
+    steps {
+        sh '''
+        docker run --rm \
+        -v $(pwd):/workspace \
+        node:20-alpine \
+        sh -c "
+        npm install -g htmlhint &&
+        htmlhint /workspace/src/index.html
+        "
+        '''
+    }
+}
 
         stage('Build Docker Image') {
             steps {
